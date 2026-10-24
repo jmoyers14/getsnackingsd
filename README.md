@@ -1,43 +1,144 @@
-# Astro Starter Kit: Minimal
+# Get Snacking SD
+
+Marketing site for Get Snacking SD — vending machine placement across North County
+San Diego. The site's job is converting property managers and business owners into
+machine requests.
+
+**Status: pre-launch scaffold.** The toolchain is set up and builds clean. There is
+no real content, styling, or lead form yet — `src/pages/index.astro` is still the
+Astro placeholder. See [Roadmap](#roadmap).
+
+## Stack
+
+| | |
+|---|---|
+| Framework | [Astro 7](https://docs.astro.build) — static by default |
+| Styling | Tailwind 4 (CSS-first, no `tailwind.config.js`) |
+| Host | Cloudflare Workers + static assets |
+| Adapter | `@astrojs/cloudflare` v14 |
+| Forms | Turnstile (spam) → KV (durable) → Resend (email) |
+
+Every page is prerendered to HTML at build time. Only `/api/lead` will opt out, via
+`export const prerender = false`.
+
+## Prerequisites
+
+- **Node 24.21.0** — pinned in `.node-version`. Astro 7 hard-refuses anything below
+  22.23.4, so this is not optional.
+- **yarn 1.22.22** — pinned via the `packageManager` field.
+
+With [fnm](https://github.com/Schniz/fnm):
 
 ```sh
-npm create astro@latest -- --template minimal
+fnm use          # picks up .node-version
+yarn install
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+If `node -v` doesn't say `v24.21.0`, nothing below will run. Add
+`fnm env --use-on-cd | source` to your `config.fish` to switch automatically.
 
-## 🚀 Project Structure
+## Local development
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+yarn dev         # http://localhost:4321
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+| Command | What it does |
+|---|---|
+| `yarn dev` | Dev server with HMR, running on real `workerd`. Reads `.dev.vars`. |
+| `yarn preview` | Builds, then serves the **production** Worker locally. |
+| `yarn typecheck` | Regenerates Worker types, then runs `astro check`. |
+| `yarn build` | Production build into `dist/`. |
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Two things that will trip you up
 
-Any static assets, like images, can be placed in the `public/` directory.
+**`yarn check` is not the typecheck command.** It's a built-in yarn 1 command that
+checks lockfile integrity, and it silently shadows any script of the same name — it
+prints `success Folder in sync` and exits 0 without typechecking anything. The script
+is called `typecheck` for exactly this reason.
 
-## 🧞 Commands
+**The dev and preview servers are daemons.** Ctrl-C does not stop them.
 
-All commands are run from the root of the project, from a terminal:
+```sh
+npx astro dev stop       # also: status, logs
+npx astro preview stop
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### `wrangler dev` is not part of the workflow
 
-## 👀 Want to learn more?
+As of `@astrojs/cloudflare` v13+, `astro dev` runs the real `workerd` runtime through
+the Cloudflare Vite plugin and reads `.dev.vars` directly. You do not need
+`wrangler dev` to exercise API routes. Older tutorials say otherwise; they predate
+the change.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Environment variables
+
+Declared as a typed schema in `astro.config.mjs` (`astro:env`), so a missing secret
+is a clear error rather than a silent `undefined`.
+
+| Variable | Type | Purpose |
+|---|---|---|
+| `RESEND_API_KEY` | secret | Resend API auth |
+| `LEAD_TO_EMAIL` | secret | Where lead notifications are sent |
+| `LEAD_FROM_EMAIL` | secret | Sender — must be a Resend-verified domain |
+| `TURNSTILE_SECRET_KEY` | secret | Turnstile server-side validation |
+| `PUBLIC_TURNSTILE_SITE_KEY` | public | Client widget key |
+
+**Locally:** put them in `.dev.vars` (gitignored). `PUBLIC_TURNSTILE_SITE_KEY`
+defaults to Cloudflare's always-passes test key (`1x00000000000000000000AA`), so a
+fresh clone builds and the form works with no setup.
+
+**In production:** `npx wrangler secret put <KEY>` for each secret. Public vars go in
+the Workers dashboard or `wrangler.jsonc`.
+
+> Not yet created — `.dev.vars.example` lands with the lead form.
+
+## Project structure
+
+```
+astro.config.mjs    site URL, static output, adapter, astro:env schema
+wrangler.jsonc      Cloudflare deploy INPUT — see note below
+.node-version       24.21.0, matched to the Workers Builds image
+src/
+  pages/            file-based routes
+  styles/global.css Tailwind import + @theme brand tokens
+public/             served verbatim at the site root
+```
+
+### Don't hand-edit `main` or `assets` in `wrangler.jsonc`
+
+The adapter owns them. `main` points at `@astrojs/cloudflare/entrypoints/server` —
+a module inside `node_modules`, not a file in this repo. At build time the adapter
+generates the **real** deploy config at `dist/client/wrangler.json`, rewriting
+`assets.directory` to `.` relative to itself.
+
+So `dist/` looks like this:
+
+- `dist/client/` — static assets uploaded to Workers Assets
+- `dist/server/` — the Worker bundle, **only populated once a route sets
+  `prerender = false`**. It is empty today, and that is correct.
+
+## Deployment
+
+Git-based deploys run through **Workers Builds** (Workers dashboard → connect repo).
+Not Cloudflare Pages — `@astrojs/cloudflare` v14 dropped Pages support entirely.
+
+> Not yet connected. When setting it up:
+>
+> - Build command **must** be `yarn build`. The default assumes npm, which would
+>   install against a `yarn.lock` and resolve a different dependency tree than you
+>   tested locally.
+> - Deploy command is `npx wrangler deploy`.
+> - Node and yarn versions come from `.node-version` and `packageManager`
+>   automatically. `24.21.0` is preinstalled in the build image, so there's nothing
+>   to fetch.
+
+## Roadmap
+
+Tracked on Shuffleboard, project *Get Snacking SD — Marketing Site*.
+
+**v1 (deployable):** scaffold ✅ → brand tokens + Layout + SEO → landing page →
+contact form → `POST /api/lead` → ship.
+
+**Phase 2 (after launch):** location pages, dedicated `/request-a-machine`, blog,
+QR code redirects (`/m/:id`).
