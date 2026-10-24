@@ -1,1 +1,113 @@
 @import "tailwindcss";
+
+/* ============================================================================
+   BRAND TOKENS — PLACEHOLDER
+   ----------------------------------------------------------------------------
+   Everything visual derives from this block. When real branding arrives,
+   edit these values and nothing else; no component hardcodes a color or font.
+
+   Names are by ROLE, not by hue, so a swap to (say) green doesn't leave
+   variables called "blue" scattered through the codebase.
+   ========================================================================== */
+@theme {
+  /* --- Brand: primary identity, used for links and emphasis --------------- */
+  --color-brand-50:  #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-brand-900: #1e3a8a;
+
+  /* --- Accent: reserved for conversion actions ---------------------------
+     Deliberately used in ONE place (the primary CTA). If this color starts
+     appearing on decorative elements, the CTA stops reading as the action. */
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+
+  /* --- Ink: text, in descending emphasis ---------------------------------- */
+  --color-ink-900: #0f172a;  /* headings */
+  --color-ink-700: #334155;  /* body */
+  --color-ink-500: #64748b;  /* secondary, captions */
+
+  /* --- Surface: backgrounds ----------------------------------------------- */
+  --color-surface-0:   #ffffff;
+  --color-surface-50:  #f8fafc;
+  --color-surface-100: #f1f5f9;
+
+  /* --- Line: borders and rules -------------------------------------------- */
+  --color-line: #e2e8f0;
+
+  /* --- Type ---------------------------------------------------------------
+     System stack for now. This is a deliberate hold, not an oversight:
+     committing to a display face before the logo exists risks fighting it.
+     To add a webfont later, set --font-display and load the face — no
+     component changes needed, since headings already reference it. */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-sans);
+
+  /* --- Type scale ---------------------------------------------------------
+     Tight at body sizes, with a deliberate jump at display sizes so headings
+     carry weight without needing decoration. */
+  --text-xs:   0.8125rem;  --text-xs--line-height:   1.25rem;
+  --text-sm:   0.9375rem;  --text-sm--line-height:   1.5rem;
+  --text-base: 1.0625rem;  --text-base--line-height: 1.75rem;
+  --text-lg:   1.1875rem;  --text-lg--line-height:   1.875rem;
+  --text-xl:   1.5rem;     --text-xl--line-height:   2rem;
+  --text-2xl:  1.875rem;   --text-2xl--line-height:  2.25rem;
+  --text-3xl:  2.25rem;    --text-3xl--line-height:  2.5rem;
+  --text-4xl:  3rem;       --text-4xl--line-height:  1.1;
+  --text-5xl:  3.75rem;    --text-5xl--line-height:  1.05;
+
+  /* --- Radius -------------------------------------------------------------- */
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* ============================================================================
+   BASE
+   ========================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Anchored sections must clear the sticky header. */
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-surface-0);
+    color: var(--color-ink-700);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    color: var(--color-ink-900);
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible keyboard focus everywhere, without showing a ring on mouse click. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

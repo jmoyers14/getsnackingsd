@@ -1,0 +1,87 @@
+---
+import { site } from '../lib/site';
+
+interface Props {
+  /** Page title. Rendered as "{title} — {site.name}" unless `titleExact`. */
+  title: string;
+  /** Meta description. Aim for 140–160 characters. */
+  description?: string;
+  /** Use `title` verbatim, without appending the site name. Home page uses this. */
+  titleExact?: boolean;
+  /** Absolute or root-relative path to the share image. */
+  ogImage?: string;
+  /** `article` for blog posts (Phase 2), `website` otherwise. */
+  ogType?: 'website' | 'article';
+  /** Emit noindex. Use for thank-you pages — they shouldn't rank. */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  titleExact = false,
+  ogImage = '/og-default.png',
+  ogType = 'website',
+  noindex = false,
+} = Astro.props;
+
+const fullTitle = titleExact ? title : `${title} — ${site.name}`;
+
+// Canonical from pathname only: query strings and hashes must never create
+// duplicate canonical URLs. Astro.site is guaranteed by the `site` config.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = new URL(ogImage, Astro.site).href;
+
+/**
+ * LocalBusiness for a service-area business — no storefront, so `areaServed`
+ * carries the geography instead of a street address.
+ *
+ * NOTE: Google's LocalBusiness rich result wants a full PostalAddress. Without
+ * one this is valid structured data but will not earn a rich result. That's the
+ * correct trade here: inventing an address to satisfy a validator would be
+ * worse than not having the rich result.
+ */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${site.url}/#business`,
+  name: site.name,
+  description: site.description,
+  url: site.url,
+  telephone: site.phone,
+  email: site.email,
+  image: ogImageUrl,
+  priceRange: 'Free placement',
+  areaServed: site.areaServed.map((city) => ({
+    '@type': 'City',
+    name: city,
+    containedInPlace: {
+      '@type': 'AdministrativeArea',
+      name: 'San Diego County, California',
+    },
+  })),
+};
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(jsonLd)}
+/>
