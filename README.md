@@ -14,6 +14,7 @@ Astro placeholder. See [Roadmap](#roadmap).
 |---|---|
 | Framework | [Astro 7](https://docs.astro.build) — static by default |
 | Styling | Tailwind 4 (CSS-first, no `tailwind.config.js`) |
+| Type | Outfit (self-hosted variable woff2 via Fontsource) |
 | Host | Cloudflare Workers + static assets |
 | Adapter | `@astrojs/cloudflare` v14 |
 | Forms | Turnstile (spam) → KV (durable) → Resend (email) |
@@ -25,14 +26,17 @@ Every page is prerendered to HTML at build time. Only `/api/lead` will opt out, 
 
 - **Node 24.21.0** — pinned in `.node-version`. Astro 7 hard-refuses anything below
   22.23.4, so this is not optional.
-- **yarn 1.22.22** — pinned via the `packageManager` field.
+- **Bun 1.3.5** — pinned via the `packageManager` field.
 
 With [fnm](https://github.com/Schniz/fnm):
 
 ```sh
 fnm use          # picks up .node-version
-yarn install
+bun install
 ```
+
+Bun is the package manager; Astro still builds on Node. Node is required even
+though installs go through Bun.
 
 If `node -v` doesn't say `v24.21.0`, nothing below will run. Add
 `fnm env --use-on-cd | source` to your `config.fish` to switch automatically.
@@ -40,22 +44,23 @@ If `node -v` doesn't say `v24.21.0`, nothing below will run. Add
 ## Local development
 
 ```sh
-yarn dev         # http://localhost:4321
+bun run dev      # http://localhost:4321
 ```
 
 | Command | What it does |
 |---|---|
-| `yarn dev` | Dev server with HMR, running on real `workerd`. Reads `.dev.vars`. |
-| `yarn preview` | Builds, then serves the **production** Worker locally. |
-| `yarn typecheck` | Regenerates Worker types, then runs `astro check`. |
-| `yarn build` | Production build into `dist/`. |
+| `bun run dev` | Dev server with HMR, running on real `workerd`. Reads `.dev.vars`. |
+| `bun run preview` | Builds, then serves the **production** Worker locally. |
+| `bun run typecheck` | Regenerates Worker types, then runs `astro check`. |
+| `bun run build` | Production build into `dist/`. |
 
 ### Two things that will trip you up
 
-**`yarn check` is not the typecheck command.** It's a built-in yarn 1 command that
-checks lockfile integrity, and it silently shadows any script of the same name — it
-prints `success Folder in sync` and exits 0 without typechecking anything. The script
-is called `typecheck` for exactly this reason.
+**`@emnapi/runtime` is a deliberate devDependency.** Neither Bun nor yarn 1
+auto-installs peer dependencies the way npm does, and `@astrojs/check` reaches it
+through `@napi-rs/wasm-runtime`. Without it, `astro check` fails to import and
+reports the package as "not installed" — the real `ERR_MODULE_NOT_FOUND` is
+swallowed. Don't prune it.
 
 **The dev and preview servers are daemons.** Ctrl-C does not stop them.
 
@@ -93,6 +98,21 @@ the Workers dashboard or `wrangler.jsonc`.
 
 > Not yet created — `.dev.vars.example` lands with the lead form.
 
+## Branding
+
+Cream `#fffdf5` with black text and rules, taken from the business card. Those two
+colors are the entire palette — there is deliberately no third accent. The primary
+CTA earns attention through contrast, not hue.
+
+Every color, font, and type-scale value lives in one `@theme` block in
+`src/styles/global.css`. No component hardcodes a color.
+
+**On the display face:** the card uses **Hero** (Fontfabric). Hero is not on Google
+Fonts, and while it's free for commercial use, Fontfabric licenses webfont embedding
+separately with pageview and domain conditions — so self-hosting it has not been
+cleared. **Outfit** stands in: same geometric lineage, uniform stroke, near-circular
+bowls. If Fontfabric confirms web use, change `--font-display` and nothing else.
+
 ## Project structure
 
 ```
@@ -125,13 +145,14 @@ Not Cloudflare Pages — `@astrojs/cloudflare` v14 dropped Pages support entirel
 
 > Not yet connected. When setting it up:
 >
-> - Build command **must** be `yarn build`. The default assumes npm, which would
->   install against a `yarn.lock` and resolve a different dependency tree than you
+> - Build command **must** be `bun run build`. The default assumes npm, which would
+>   install against a `bun.lock` and resolve a different dependency tree than you
 >   tested locally.
 > - Deploy command is `npx wrangler deploy`.
-> - Node and yarn versions come from `.node-version` and `packageManager`
->   automatically. `24.21.0` is preinstalled in the build image, so there's nothing
->   to fetch.
+> - Node and Bun versions come from `.node-version` and `packageManager`
+>   automatically. Node `24.21.0` is preinstalled in the build image. The image
+>   ships Bun 1.4.3 while we pin 1.3.5, so Bun is fetched — harmless, but it's
+>   why the install step isn't instant.
 
 ## Roadmap
 
