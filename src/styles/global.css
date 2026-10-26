@@ -79,10 +79,14 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* The card sets its wordmark LIGHT and tracked OUT, not bold and tight.
+     Weight 400 and positive tracking carry that over; headings get their
+     presence from size and air rather than from weight. */
   h1, h2, h3, h4 {
     color: var(--color-ink-900);
     font-family: var(--font-display);
-    letter-spacing: -0.02em;  /* Outfit is geometric; tightening steadies it */
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-wrap: balance;
   }
 

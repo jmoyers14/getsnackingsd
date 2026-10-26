@@ -4,22 +4,22 @@
  * Nav, footer, and the LocalBusiness JSON-LD all read from here, so these
  * values can never drift out of sync with each other.
  *
- * TODO(jeremy): replace every PLACEHOLDER before launch. The phone and email
- * are also emitted into structured data, so wrong values here get indexed.
+ * Phone and email are taken from the business card and are emitted into the
+ * LocalBusiness JSON-LD, so changes here propagate to what Google indexes.
  */
 
 export const site = {
   name: 'Get Snacking SD',
+  /** The descriptor that sits under the wordmark on the card, tracked out. */
+  descriptor: 'Vending Supply',
   /** Used in <title> as "Page — Tagline" on the home page only. */
   tagline: 'Vending machines for North County San Diego',
   description:
     'Free vending machine placement for offices, apartments, gyms, and 24-hour facilities across North County San Diego. We install, stock, and service the machine at no cost to you.',
   url: 'https://getsnackingsd.com',
 
-  /** PLACEHOLDER — real number needed before launch. */
-  phone: '+1-760-555-0100',
-  /** PLACEHOLDER — real inbox needed before launch. */
-  email: 'hello@getsnackingsd.com',
+  phone: '+1-805-284-8298',
+  email: 'Getsnackingsd@gmail.com',
 
   /**
    * Service-area business: no storefront customers visit. `areaServed` carries
