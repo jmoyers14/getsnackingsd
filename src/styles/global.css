@@ -1,56 +1,51 @@
 @import "tailwindcss";
 
-/* ============================================================================
-   BRAND TOKENS — PLACEHOLDER
-   ----------------------------------------------------------------------------
-   Everything visual derives from this block. When real branding arrives,
-   edit these values and nothing else; no component hardcodes a color or font.
+/* Self-hosted variable Outfit — no third-party request, no CSP exception,
+   one file covers every weight. Swap target if Hero gets a web license. */
+@import "@fontsource-variable/outfit";
 
-   Names are by ROLE, not by hue, so a swap to (say) green doesn't leave
-   variables called "blue" scattered through the codebase.
+/* ============================================================================
+   BRAND TOKENS
+   ----------------------------------------------------------------------------
+   Taken from the Get Snacking SD business card: cream background, dark-gray
+   text and rules. Those two colors are the whole identity — there is
+   deliberately no third accent color. The primary CTA earns attention through
+   contrast (gray on cream), not through a hue nobody chose.
+
+   Everything visual derives from this block. Nothing else hardcodes a color.
    ========================================================================== */
 @theme {
-  /* --- Brand: primary identity, used for links and emphasis --------------- */
-  --color-brand-50:  #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-900: #1e3a8a;
+  /* --- Surface: the card cream, plus two deeper tints for banding --------- */
+  --color-surface-0:   #fffdf5;  /* page background — the brand cream */
+  --color-surface-50:  #faf6e9;  /* alternating sections */
+  --color-surface-100: #f3eeda;  /* wells, inset panels */
 
-  /* --- Accent: reserved for conversion actions ---------------------------
-     Deliberately used in ONE place (the primary CTA). If this color starts
-     appearing on decorative elements, the CTA stops reading as the action. */
-  --color-accent-400: #fbbf24;
-  --color-accent-500: #f59e0b;
-  --color-accent-600: #d97706;
+  /* --- Ink ----------------------------------------------------------------
+     One ink, exactly as on the card. At 9.79:1 on the cream it carries
+     headings AND body copy, so hierarchy comes from size and weight rather
+     than from fading the text — which is how a two-color identity should
+     translate. ink-500 is the same gray at 80% over the cream (5.51:1,
+     still AA for body) for genuinely secondary content. */
+  --color-ink-900: #424249;  /* headings, body, rules, CTA fill */
+  --color-ink-500: #68676b;  /* secondary, captions, meta */
 
-  /* --- Ink: text, in descending emphasis ---------------------------------- */
-  --color-ink-900: #0f172a;  /* headings */
-  --color-ink-700: #334155;  /* body */
-  --color-ink-500: #64748b;  /* secondary, captions */
-
-  /* --- Surface: backgrounds ----------------------------------------------- */
-  --color-surface-0:   #ffffff;
-  --color-surface-50:  #f8fafc;
-  --color-surface-100: #f1f5f9;
-
-  /* --- Line: borders and rules -------------------------------------------- */
-  --color-line: #e2e8f0;
+  /* --- Line ---------------------------------------------------------------
+     The card rules the full gray, so `line` is that gray. `line-soft` exists
+     because a hard rule between every minor element reads as a grid, not a
+     brand — use it for internal dividers and reserve `line` for edges that
+     define a shape. */
+  --color-line:      #424249;
+  --color-line-soft: #e3e1db;  /* the same gray at 15% over cream */
 
   /* --- Type ---------------------------------------------------------------
-     System stack for now. This is a deliberate hold, not an oversight:
-     committing to a display face before the logo exists risks fighting it.
-     To add a webfont later, set --font-display and load the face — no
-     component changes needed, since headings already reference it. */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-sans);
+     Outfit stands in for Hero (Fontfabric) pending a webfont license: same
+     geometric lineage, uniform stroke, near-circular bowls. If Hero clears,
+     change --font-display only. */
+  --font-display: "Outfit Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Outfit Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  /* --- Type scale ---------------------------------------------------------
-     Tight at body sizes, with a deliberate jump at display sizes so headings
-     carry weight without needing decoration. */
+  /* --- Type scale --------------------------------------------------------- */
   --text-xs:   0.8125rem;  --text-xs--line-height:   1.25rem;
   --text-sm:   0.9375rem;  --text-sm--line-height:   1.5rem;
   --text-base: 1.0625rem;  --text-base--line-height: 1.75rem;
@@ -58,8 +53,8 @@
   --text-xl:   1.5rem;     --text-xl--line-height:   2rem;
   --text-2xl:  1.875rem;   --text-2xl--line-height:  2.25rem;
   --text-3xl:  2.25rem;    --text-3xl--line-height:  2.5rem;
-  --text-4xl:  3rem;       --text-4xl--line-height:  1.1;
-  --text-5xl:  3.75rem;    --text-5xl--line-height:  1.05;
+  --text-4xl:  3rem;       --text-4xl--line-height:  1.08;
+  --text-5xl:  3.75rem;    --text-5xl--line-height:  1.02;
 
   /* --- Radius -------------------------------------------------------------- */
   --radius-md: 0.5rem;
@@ -73,14 +68,13 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Anchored sections must clear the sticky header. */
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 5rem;  /* anchors must clear the sticky header */
     -webkit-text-size-adjust: 100%;
   }
 
   body {
     background-color: var(--color-surface-0);
-    color: var(--color-ink-700);
+    color: var(--color-ink-900);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
@@ -88,17 +82,17 @@
   h1, h2, h3, h4 {
     color: var(--color-ink-900);
     font-family: var(--font-display);
+    letter-spacing: -0.02em;  /* Outfit is geometric; tightening steadies it */
     text-wrap: balance;
   }
 
-  p {
-    text-wrap: pretty;
-  }
+  p { text-wrap: pretty; }
 
-  /* Visible keyboard focus everywhere, without showing a ring on mouse click. */
+  /* Keyboard focus must stay visible on a cream ground, where a thin ring in
+     the brand gray can disappear into adjacent rules — hence the offset. */
   :focus-visible {
-    outline: 2px solid var(--color-brand-600);
-    outline-offset: 2px;
+    outline: 2px solid var(--color-ink-900);
+    outline-offset: 3px;
     border-radius: 2px;
   }
 
