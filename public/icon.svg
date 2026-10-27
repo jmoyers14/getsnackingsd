@@ -12,7 +12,8 @@
     }
   </style>
   <rect class="tile" width="64" height="64" rx="14"/>
-  <rect class="body" x="15" y="9" width="34" height="46" rx="5"/>
-  <circle class="f" cx="26" cy="20" r="3.3"/><circle class="f" cx="38" cy="20" r="3.3"/><path class="f" d="M21 27 L43 27 Q43 38 32 38 Q21 38 21 27 Z"/>
-  <rect class="f" x="21" y="44" width="22" height="6" rx="2"/>
+  <rect class="body" x="18" y="49" width="7" height="8" rx="1.5"/><rect class="body" x="39" y="49" width="7" height="8" rx="1.5"/>
+  <rect class="body" x="15" y="7" width="34" height="44" rx="5"/>
+  <circle class="f" cx="26" cy="17.5" r="3.3"/><circle class="f" cx="38" cy="17.5" r="3.3"/><path class="f" d="M21 24.5 L43 24.5 Q43 35 32 35 Q21 35 21 24.5 Z"/>
+  <rect class="f" x="21" y="40" width="22" height="6" rx="2"/>
 </svg>
