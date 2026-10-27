@@ -51,7 +51,7 @@ const jsonLd = {
   // Structured data is public in the page source even though it renders
   // nothing, so the contact switch has to gate it too — otherwise hiding the
   // footer would still leave the phone and email scrapeable and indexed.
-  ...(site.showContactInfo
+  ...(site.listContactDetails
     ? { telephone: site.phone, email: site.email }
     : {}),
   image: ogImageUrl,

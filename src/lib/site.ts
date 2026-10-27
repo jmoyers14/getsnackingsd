@@ -35,7 +35,8 @@ export const site = {
   region: 'North County San Diego',
 
   /**
-   * Primary conversion target. Only rendered when `showContactInfo` is true.
+   * Primary conversion target. Always rendered — it's the only way to reach
+   * the business while `listContactDetails` is false.
    *
    * When the form lands, change this to '/#contact' and the header button
    * scrolls in-page instead of opening a mail client.
@@ -44,15 +45,16 @@ export const site = {
   ctaLabel: 'Contact us',
 
   /**
-   * Master switch for every public appearance of the phone and email:
-   * the header CTA, the footer block, the 404 page, and the telephone/email
-   * fields in the LocalBusiness JSON-LD.
+   * Whether to LIST the phone and email as readable text — the footer block,
+   * the 404 page, and the telephone/email fields in the LocalBusiness JSON-LD.
    *
-   * Deliberately false for the initial launch — the site goes live as a
-   * brochure without publishing contact details. Flip to true to expose
-   * them everywhere at once; no other file needs editing.
+   * False for launch: the site goes live without publishing them. Note this
+   * does NOT hide the email completely, because the Contact us button is a
+   * mailto and its href contains the address. It keeps the phone off the site
+   * entirely and keeps both out of structured data, but an address in a
+   * mailto href is still harvestable. Flip to true to list them everywhere.
    */
-  showContactInfo: false,
+  listContactDetails: false,
 } as const;
 
 /**

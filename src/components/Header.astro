@@ -17,27 +17,23 @@ import { site, navLinks } from '../lib/site';
       </span>
     </a>
 
-    {
-      (navLinks.length > 0 || site.showContactInfo) && (
-        <nav class="flex items-center gap-6" aria-label="Main">
-          {navLinks.map((link) => (
-            <a
-              href={link.href}
-              class="hidden text-sm text-ink-900 underline-offset-4 hover:underline sm:block"
-            >
-              {link.label}
-            </a>
-          ))}
-          {site.showContactInfo && (
-            <a
-              href={site.ctaHref}
-              class="rounded-md bg-ink-900 px-4 py-2 text-sm font-medium tracking-wide text-surface-0 transition-opacity hover:opacity-85"
-            >
-              {site.ctaLabel}
-            </a>
-          )}
-        </nav>
-      )
-    }
+    <nav class="flex items-center gap-6" aria-label="Main">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="hidden text-sm text-ink-900 underline-offset-4 hover:underline sm:block"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <a
+        href={site.ctaHref}
+        class="rounded-md bg-ink-900 px-4 py-2 text-sm font-medium tracking-wide text-surface-0 transition-opacity hover:opacity-85"
+      >
+        {site.ctaLabel}
+      </a>
+    </nav>
   </div>
 </header>
