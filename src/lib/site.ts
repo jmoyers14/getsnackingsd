@@ -35,14 +35,24 @@ export const site = {
   region: 'North County San Diego',
 
   /**
-   * Primary conversion target.
+   * Primary conversion target. Only rendered when `showContactInfo` is true.
    *
-   * INTERIM: points at email because the in-page form was removed. Card 4
-   * builds the real form — switch this back to '/#contact' then, and the
-   * header button starts scrolling to it instead of opening a mail client.
+   * When the form lands, change this to '/#contact' and the header button
+   * scrolls in-page instead of opening a mail client.
    */
   ctaHref: 'mailto:Getsnackingsd@gmail.com?subject=Vending%20machine%20enquiry',
   ctaLabel: 'Contact us',
+
+  /**
+   * Master switch for every public appearance of the phone and email:
+   * the header CTA, the footer block, the 404 page, and the telephone/email
+   * fields in the LocalBusiness JSON-LD.
+   *
+   * Deliberately false for the initial launch — the site goes live as a
+   * brochure without publishing contact details. Flip to true to expose
+   * them everywhere at once; no other file needs editing.
+   */
+  showContactInfo: false,
 } as const;
 
 /**

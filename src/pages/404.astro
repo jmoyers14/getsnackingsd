@@ -5,7 +5,7 @@ import { site, phoneHref, phoneDisplay } from '../lib/site';
 
 <Layout
   title="Page not found"
-  description="That page doesn't exist. Head back to the home page or get in touch."
+  description="That page doesn't exist. Head back to the home page."
   noindex
 >
   <section class="mx-auto max-w-6xl px-5 py-24 sm:py-32">
@@ -25,19 +25,23 @@ import { site, phoneHref, phoneDisplay } from '../lib/site';
       >
         Back to home
       </a>
-      <p class="text-sm text-ink-500">
-        Or reach us at{' '}
-        <a href={phoneHref} class="text-ink-900 underline underline-offset-4">
-          {phoneDisplay}
-        </a>
-        {' · '}
-        <a
-          href={`mailto:${site.email}`}
-          class="text-ink-900 underline underline-offset-4"
-        >
-          {site.email}
-        </a>
-      </p>
+      {
+        site.showContactInfo && (
+          <p class="text-sm text-ink-500">
+            Or reach us at{' '}
+            <a href={phoneHref} class="text-ink-900 underline underline-offset-4">
+              {phoneDisplay}
+            </a>
+            {' · '}
+            <a
+              href={`mailto:${site.email}`}
+              class="text-ink-900 underline underline-offset-4"
+            >
+              {site.email}
+            </a>
+          </p>
+        )
+      }
     </div>
   </section>
 </Layout>
