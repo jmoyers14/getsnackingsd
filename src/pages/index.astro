@@ -1,18 +1,29 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import HeroSnacks from '../assets/hero-snacks.svg';
 import { site } from '../lib/site';
 ---
 
 <Layout title={`${site.name} — ${site.descriptor}`} titleExact>
-  <section class="mx-auto max-w-6xl px-5 py-24">
-    <p class="text-xs uppercase tracking-[0.22em] text-ink-500">
-      {site.region}
-    </p>
-    <h1 class="mt-5 max-w-3xl text-4xl sm:text-5xl">
-      {site.tagline}
-    </h1>
-    <p class="mt-6 max-w-2xl text-lg text-ink-900">
-      {site.description}
-    </p>
+  <section class="mx-auto max-w-6xl px-5 py-20 sm:py-24">
+    <div class="grid items-center gap-12 md:grid-cols-[1fr_auto] md:gap-20">
+      <div>
+        <p class="text-xs uppercase tracking-[0.22em] text-ink-500">
+          {site.region}
+        </p>
+        <h1 class="mt-5 max-w-2xl text-4xl sm:text-5xl">
+          {site.tagline}
+        </h1>
+        <p class="mt-6 max-w-xl text-lg text-ink-900">
+          {site.description}
+        </p>
+      </div>
+
+      <HeroSnacks
+        role="img"
+        aria-label="Line drawing of a hand holding three snack packages"
+        class="order-first mx-auto w-[180px] text-ink-900 sm:w-[220px] md:order-none md:w-[300px]"
+      />
+    </div>
   </section>
 </Layout>
