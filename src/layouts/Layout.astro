@@ -42,7 +42,9 @@ interface Props {
 
     <Header />
 
-    <main id="main" class="flex-1">
+    <!-- flex column so a short page's content can centre itself with
+         my-auto instead of hugging the top and leaving a gap above the footer -->
+    <main id="main" class="flex flex-1 flex-col">
       <slot />
     </main>
 
