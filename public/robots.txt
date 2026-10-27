@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# @astrojs/sitemap emits sitemap-index.xml, not sitemap.xml
+Sitemap: https://getsnackingsd.com/sitemap-index.xml
