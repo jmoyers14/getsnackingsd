@@ -34,9 +34,15 @@ export const site = {
   ],
   region: 'North County San Diego',
 
-  /** Primary conversion target. One page in v1, so this is an in-page anchor. */
-  ctaHref: '/#contact',
-  ctaLabel: 'Request a machine',
+  /**
+   * Primary conversion target.
+   *
+   * INTERIM: points at email because the in-page form was removed. Card 4
+   * builds the real form — switch this back to '/#contact' then, and the
+   * header button starts scrolling to it instead of opening a mail client.
+   */
+  ctaHref: 'mailto:Getsnackingsd@gmail.com?subject=Vending%20machine%20enquiry',
+  ctaLabel: 'Contact us',
 } as const;
 
 /**
