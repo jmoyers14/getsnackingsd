@@ -27,13 +27,10 @@ export const site = {
    */
   areaServed: [
     'Carlsbad',
-    'Oceanside',
     'Vista',
     'San Marcos',
-    'Encinitas',
     'Escondido',
-    'Del Mar',
-    'Solana Beach',
+    'Poway',
   ],
   region: 'North County San Diego',
 
