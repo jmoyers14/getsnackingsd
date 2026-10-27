@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, envField } from 'astro/config';
+import { defineConfig } from 'astro/config';
 
 import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
@@ -9,7 +9,8 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://getsnackingsd.com',
 
-  // Static by default. Only /api/lead opts out via `export const prerender = false`.
+  // Fully static. Nothing opts out of prerendering yet; the contact form's
+  // endpoint will be the first route to set `prerender = false`.
   output: 'static',
 
   adapter: cloudflare(),
@@ -20,20 +21,6 @@ export default defineConfig({
 
   integrations: [sitemap()],
 
-  env: {
-    schema: {
-      RESEND_API_KEY: envField.string({ context: 'server', access: 'secret' }),
-      LEAD_TO_EMAIL: envField.string({ context: 'server', access: 'secret' }),
-      LEAD_FROM_EMAIL: envField.string({ context: 'server', access: 'secret' }),
-      TURNSTILE_SECRET_KEY: envField.string({ context: 'server', access: 'secret' }),
-
-      // Defaults to Cloudflare's "always passes" test sitekey so a fresh clone
-      // builds and the form works locally with no setup. Production overrides it.
-      PUBLIC_TURNSTILE_SITE_KEY: envField.string({
-        context: 'client',
-        access: 'public',
-        default: '1x00000000000000000000AA',
-      }),
-    },
-  },
+  // No `env.schema` yet: v1 is fully static with a mailto CTA, so there are no
+  // secrets to declare. The Resend/Turnstile schema returns with the form.
 });

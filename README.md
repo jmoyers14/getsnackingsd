@@ -4,9 +4,9 @@ Marketing site for Get Snacking SD — vending machine placement across North Co
 San Diego. The site's job is converting property managers and business owners into
 machine requests.
 
-**Status: pre-launch scaffold.** The toolchain is set up and builds clean. There is
-no real content, styling, or lead form yet — `src/pages/index.astro` is still the
-Astro placeholder. See [Roadmap](#roadmap).
+**Status: pre-launch.** Branding, layout, and SEO are done. The landing page is
+hero-only; remaining sections are in progress. Contact is a `mailto:` link — a real
+form is planned as a separate effort after launch. See [Roadmap](#roadmap).
 
 ## Stack
 
@@ -17,7 +17,6 @@ Astro placeholder. See [Roadmap](#roadmap).
 | Type | Outfit (self-hosted variable woff2 via Fontsource) |
 | Host | Cloudflare Workers + static assets |
 | Adapter | `@astrojs/cloudflare` v14 |
-| Forms | Turnstile (spam) → KV (durable) → Resend (email) |
 
 Every page is prerendered to HTML at build time. Only `/api/lead` will opt out, via
 `export const prerender = false`.
@@ -49,7 +48,7 @@ bun run dev      # http://localhost:4321
 
 | Command | What it does |
 |---|---|
-| `bun run dev` | Dev server with HMR, running on real `workerd`. Reads `.dev.vars`. |
+| `bun run dev` | Dev server with HMR, running on real `workerd`. |
 | `bun run preview` | Builds, then serves the **production** Worker locally. |
 | `bun run typecheck` | Regenerates Worker types, then runs `astro check`. |
 | `bun run build` | Production build into `dist/`. |
@@ -72,31 +71,17 @@ npx astro preview stop
 ### `wrangler dev` is not part of the workflow
 
 As of `@astrojs/cloudflare` v13+, `astro dev` runs the real `workerd` runtime through
-the Cloudflare Vite plugin and reads `.dev.vars` directly. You do not need
+the Cloudflare Vite plugin, and reads `.dev.vars` if one exists. You do not need
 `wrangler dev` to exercise API routes. Older tutorials say otherwise; they predate
 the change.
 
 ## Environment variables
 
-Declared as a typed schema in `astro.config.mjs` (`astro:env`), so a missing secret
-is a clear error rather than a silent `undefined`.
+None. v1 is fully static with a `mailto:` call to action, so there are no
+secrets, no API keys, and no `.dev.vars` file. Nothing to configure to run it.
 
-| Variable | Type | Purpose |
-|---|---|---|
-| `RESEND_API_KEY` | secret | Resend API auth |
-| `LEAD_TO_EMAIL` | secret | Where lead notifications are sent |
-| `LEAD_FROM_EMAIL` | secret | Sender — must be a Resend-verified domain |
-| `TURNSTILE_SECRET_KEY` | secret | Turnstile server-side validation |
-| `PUBLIC_TURNSTILE_SITE_KEY` | public | Client widget key |
-
-**Locally:** put them in `.dev.vars` (gitignored). `PUBLIC_TURNSTILE_SITE_KEY`
-defaults to Cloudflare's always-passes test key (`1x00000000000000000000AA`), so a
-fresh clone builds and the form works with no setup.
-
-**In production:** `npx wrangler secret put <KEY>` for each secret. Public vars go in
-the Workers dashboard or `wrangler.jsonc`.
-
-> Not yet created — `.dev.vars.example` lands with the lead form.
+That changes when the contact form lands — it needs a delivery mechanism and
+spam protection, and the `astro:env` schema comes back with it.
 
 ## Branding
 
@@ -158,8 +143,8 @@ Not Cloudflare Pages — `@astrojs/cloudflare` v14 dropped Pages support entirel
 
 Tracked on Shuffleboard, project *Get Snacking SD — Marketing Site*.
 
-**v1 (deployable):** scaffold ✅ → brand tokens + Layout + SEO → landing page →
-contact form → `POST /api/lead` → ship.
+**v1 (deployable):** scaffold ✅ → brand tokens + Layout + SEO ✅ → landing page →
+ship. No form, no secrets, fully static.
 
-**Phase 2 (after launch):** location pages, dedicated `/request-a-machine`, blog,
-QR code redirects (`/m/:id`).
+**After launch:** contact form (its own planning cycle — needs a delivery
+mechanism decision), location pages, blog, QR code redirects (`/m/:id`).
