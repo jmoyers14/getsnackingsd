@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .tile { fill: #3E3D42; }
+    .body { fill: #FDFCF4; }
+    .f { fill: #3E3D42; }
+    .s { fill: none; stroke: #3E3D42; stroke-linecap: round; }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #FDFCF4; }
+      .body { fill: #3E3D42; }
+      .f { fill: #FDFCF4; }
+      .s { stroke: #FDFCF4; }
+    }
+  </style>
+  <rect class="tile" width="64" height="64" rx="14"/>
+  <rect class="body" x="15" y="9" width="34" height="46" rx="5"/>
+  <circle class="f" cx="26" cy="20" r="3.3"/><circle class="f" cx="38" cy="20" r="3.3"/><path class="f" d="M21 27 L43 27 Q43 38 32 38 Q21 38 21 27 Z"/>
+  <rect class="f" x="21" y="44" width="22" height="6" rx="2"/>
+</svg>

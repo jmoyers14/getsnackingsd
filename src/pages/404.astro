@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site, phoneHref, phoneDisplay } from '../lib/site';
+---
+
+<Layout
+  title="Page not found"
+  description="That page doesn't exist. Head back to the home page or get in touch."
+  noindex
+>
+  <section class="mx-auto max-w-6xl px-5 py-24 sm:py-32">
+    <p class="text-xs uppercase tracking-[0.22em] text-ink-500">Error 404</p>
+
+    <h1 class="mt-5 max-w-2xl text-4xl sm:text-5xl">This one's sold out</h1>
+
+    <p class="mt-6 max-w-xl text-lg text-ink-900">
+      The page you're after doesn't exist — it may have moved, or the link may
+      have a typo in it.
+    </p>
+
+    <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+      <a
+        href="/"
+        class="inline-block rounded-md bg-ink-900 px-6 py-3 font-medium tracking-wide text-surface-0 transition-opacity hover:opacity-85"
+      >
+        Back to home
+      </a>
+      <p class="text-sm text-ink-500">
+        Or reach us at{' '}
+        <a href={phoneHref} class="text-ink-900 underline underline-offset-4">
+          {phoneDisplay}
+        </a>
+        {' · '}
+        <a
+          href={`mailto:${site.email}`}
+          class="text-ink-900 underline underline-offset-4"
+        >
+          {site.email}
+        </a>
+      </p>
+    </div>
+  </section>
+</Layout>

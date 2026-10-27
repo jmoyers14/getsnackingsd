@@ -20,7 +20,13 @@ interface Props {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <!-- Matches --color-surface-0 exactly: mobile browser chrome sits flush
+         against the page instead of a near-miss cream. -->
+    <meta name="theme-color" content="#fffdf5" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <SEO {...Astro.props} />
     <slot name="head" />
